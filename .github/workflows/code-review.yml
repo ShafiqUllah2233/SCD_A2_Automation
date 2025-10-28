@@ -1,0 +1,27 @@
+name: Code Review Automation
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run CodeQL Security Scan
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript"
+
+      - name: Comment on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            ✅ Code style and security checks completed.
+            Please fix any issues before merging.

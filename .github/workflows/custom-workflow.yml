@@ -1,0 +1,25 @@
+name: Generate Release Notes
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release-notes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate Release Notes
+        uses: mikepenz/release-changelog-builder-action@v5
+        with:
+          configuration: ".github/release-config.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Notes
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: CHANGELOG.md
